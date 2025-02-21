@@ -19,7 +19,7 @@ document.getElementById("runButton").addEventListener("click", async () => {
   }
 
   try {
-    // Send code to the server for compilation and execution
+    // Send code and input to the server for compilation and execution
     const response = await fetch("http://localhost:3000/run", {
       method: "POST",
       headers: {
@@ -40,21 +40,13 @@ document.getElementById("runButton").addEventListener("click", async () => {
     const data = await response.json();
 
     // Display the compiled output
-    if (data.output) {
-      outputElement.textContent = data.output;
-    } else {
-      outputElement.textContent = "No output from program.";
-    }
+    outputElement.textContent = data.output || "No output from program.";
   } catch (error) {
     // In case the fetch request fails (e.g., network error)
     console.error("Fetch error:", error);
-    // server offline message
-  outputElement.textContent =
-    "An error occurred while communicating with the server.\n" +
-    "\n"+
-    "Try running the server first. \n" + 
-    "or\n" +
-    "Please try again later.";
+    outputElement.textContent =
+      "An error occurred while communicating with the server.\n" +
+      "Try running the server first or please try again later.";
   }
 });
 
@@ -100,9 +92,7 @@ document
     });
 
     // Switch between sun/moon icons based on the mode
-    if (document.body.classList.contains("dark-mode")) {
-      darkModeButton.textContent = "🌞"; // Sun icon in dark mode
-    } else {
-      darkModeButton.textContent = "🌙"; // Moon icon in light mode
-    }
+    darkModeButton.textContent = document.body.classList.contains("dark-mode")
+      ? "🌞"
+      : "🌙";
   });
