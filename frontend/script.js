@@ -9,8 +9,9 @@ document.getElementById("runButton").addEventListener("click", async () => {
   const stdinInput = document.getElementById("stdinInput").value;
   const outputElement = document.getElementById("output");
 
-  // Clear previous output
+  // Clear previous output but maintain output box size
   outputElement.textContent = "";
+  outputElement.style.maxHeight = "200px"; // Reset to default height
 
   // If the user has not entered any code
   if (code.trim() === "") {
@@ -33,6 +34,7 @@ document.getElementById("runButton").addEventListener("click", async () => {
       const errorData = await response.json();
       outputElement.textContent =
         errorData.error || "An unknown error occurred during compilation.";
+      outputElement.style.overflowY = "auto"; // Allow scrolling for long errors
       return;
     }
 
@@ -47,6 +49,7 @@ document.getElementById("runButton").addEventListener("click", async () => {
     outputElement.textContent =
       "An error occurred while communicating with the server.\n" +
       "Try running the server first or please try again later.";
+    outputElement.style.overflowY = "auto"; // Ensure errors don't stretch the box
   }
 });
 
