@@ -207,9 +207,10 @@ pre {
     height: 300px;
     /* overflow-y: auto; */
     font-size: 14px;
-    border: 1px solid #007bff;
-    border-radius: 8px;
+    /* border: 1px solid #007bff; */
+    /* border-radius: 8px; */
     /* box-shadow: 0 0 5px #007bff; */
+    /* inner box ko close krdia for better output visibility*/
 }
 
 .dark-mode pre {
