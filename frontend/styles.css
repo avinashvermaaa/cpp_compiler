@@ -197,7 +197,7 @@ button:hover {
 .dark-mode .output {
     background: #333;
     color: white;
-    box-shadow: 0 0 5px #007bff;
+    /* box-shadow: 0 0 5px #007bff; */
 }
 
 pre {
@@ -210,13 +210,12 @@ pre {
     /* border: 1px solid #007bff; */
     /* border-radius: 8px; */
     /* box-shadow: 0 0 5px #007bff; */
-    /* inner box ko close krdia for better output visibility*/
 }
 
 .dark-mode pre {
     background-color: #333;
     color: white;
-    box-shadow: 0 0 5px #007bff;
+    /* box-shadow: 0 0 5px #007bff; */
 }
 
 @media (max-width: 768px) {
