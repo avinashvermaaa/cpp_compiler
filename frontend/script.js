@@ -1,3 +1,4 @@
+const BACKEND_URL = "https://cpp-compiler-qrgp.onrender.com";
 // JavaScript for handling code execution and other features
 
 // Global variable to store the filename
@@ -21,7 +22,7 @@ document.getElementById("runButton").addEventListener("click", async () => {
 
   try {
     // Send code and input to the server for compilation and execution
-    const response = await fetch("https://cpp-compiler-qrgp.onrender.com", {
+    const response = await fetch(`${BACKEND_URL}/compile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
