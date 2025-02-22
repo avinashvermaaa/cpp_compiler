@@ -7,70 +7,70 @@ const path = require("path"); // Module to handle file paths
 const { v4: uuidv4 } = require("uuid"); // UUID generator to create unique file names
 
 const app = express(); // Initialize Express app
-const port = 3000; // Define port number for the server
+const port = process.env.PORT || 3000; // Use dynamic port for Render, default to 3000
 
 // Enable CORS and JSON body parsing
 app.use(cors()); // Allow cross-origin requests
 app.use(bodyParser.json()); // Parse JSON request bodies
-app.use(express.static(path.join(__dirname, "../frontend"))); // Serve static files from frontend directory
 
 // API endpoint to compile and execute C++ code
-app.post("/run", (req, res) => {
-  const { code, input } = req.body; // Extract code and input from request body
+app.post("/compile", (req, res) => {
+  // Changed from "/run" to "/compile" for consistency
+  const { code, input } = req.body;
   if (!code) {
-    return res.status(400).json({ error: "No code provided." }); // Return error if no code is provided
+    return res.status(400).json({ error: "No code provided." });
   }
 
-  const uniqueId = uuidv4(); // Generate a unique identifier for file names
-  const filePath = path.join(__dirname, `temp_${uniqueId}.cpp`); // Create a temporary C++ file
-  const outputPath = path.join(__dirname, `temp_${uniqueId}.out`); // Define output executable file
+  const uniqueId = uuidv4();
+  const filePath = path.join(__dirname, `temp_${uniqueId}.cpp`);
+  const outputPath = path.join(__dirname, `temp_${uniqueId}.out`);
 
   try {
-    fs.writeFileSync(filePath, code); // Write the received C++ code to a temporary file // Compile the C++ code using g++
+    fs.writeFileSync(filePath, code);
 
     exec(`g++ "${filePath}" -o "${outputPath}"`, (err, stdout, stderr) => {
       if (err) {
-        fs.unlinkSync(filePath); // Delete source file on compilation error
-        return res.status(400).json({ error: stderr || "Compilation error." }); // Return compilation error message
-      } // Run the compiled executable
-
-      const process = spawn(outputPath); // Spawn a child process to execute the compiled program
-
-      if (input) {
-        process.stdin.write(input + "\n"); // Send input to the C++ program
-        process.stdin.end(); // Close stdin stream after sending input
+        fs.unlinkSync(filePath);
+        return res.status(400).json({ error: stderr || "Compilation error." });
       }
 
-      let output = ""; // Variable to store standard output
-      let errorOutput = ""; // Variable to store error output
+      const process = spawn(outputPath);
+
+      if (input) {
+        process.stdin.write(input + "\n");
+        process.stdin.end();
+      }
+
+      let output = "";
+      let errorOutput = "";
 
       process.stdout.on("data", (data) => {
-        output += data.toString(); // Append received data to output
+        output += data.toString();
       });
 
       process.stderr.on("data", (data) => {
-        errorOutput += data.toString(); // Append received data to error output
+        errorOutput += data.toString();
       });
 
       process.on("close", (code) => {
-        fs.unlinkSync(filePath); // Delete source file after execution
-        fs.unlinkSync(outputPath); // Delete compiled executable after execution
+        fs.unlinkSync(filePath);
+        fs.unlinkSync(outputPath);
 
         if (code !== 0) {
           return res
             .status(400)
-            .json({ error: errorOutput || "Runtime error" }); // Return runtime error if exit code is non-zero
+            .json({ error: errorOutput || "Runtime error" });
         }
 
-        res.json({ output }); // Send the program output as response
+        res.json({ output });
       });
     });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error." }); // Handle unexpected server errors
+    return res.status(500).json({ error: "Internal server error." });
   }
 });
 
 // Start the server and listen on the defined port
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`); // Log server start message
+  console.log(`Server running at http://localhost:${port}`);
 });
