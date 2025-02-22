@@ -21,7 +21,7 @@ document.getElementById("runButton").addEventListener("click", async () => {
 
   try {
     // Send code and input to the server for compilation and execution
-    const response = await fetch("http://localhost:3000/run", {
+    const response = await fetch("https://cpp-compiler-qrgp.onrender.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
